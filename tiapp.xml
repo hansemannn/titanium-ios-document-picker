@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ti:app 
+  xmlns:ti="http://ti.appcelerator.org">
+  <id>com.appc.docpicker</id>
+  <name>TiDocumentPicker</name>
+  <version>1.0.0</version>
+  <publisher>Hans Knöchel</publisher>
+  <url/>
+  <description/>
+  <copyright>not specified</copyright>
+  <icon>appicon.png</icon>
+  <fullscreen>false</fullscreen>
+  <navbar-hidden>false</navbar-hidden>
+  <analytics>true</analytics>
+  <guid>11111111-1111-1111-1111-111111111111</guid>
+  <property name="ti.ui.defaultunit" type="string">dp</property>
+  <property name="run-on-main-thread" type="bool">true</property>
+  <transpile>true</transpile>
+  <ios>
+	
+		<!-- REQUIRED: Enter your Team ID -->
+		<team-id>ENTER_YOUR_TEAM_ID_HERE</team-id>
+
+    <enable-launch-screen-storyboard>true</enable-launch-screen-storyboard>
+    <use-app-thinning>true</use-app-thinning>
+    <plist>
+      <dict></dict>
+    </plist>
+    <entitlements>
+      <dict>
+        <key>com.apple.developer.icloud-container-identifiers</key>
+        <array>
+          <string>iCloud.$(CFBundleIdentifier)</string>
+        </array>
+        <key>com.apple.developer.icloud-services</key>
+        <array>
+          <string>CloudDocuments</string>
+        </array>
+        <key>com.apple.developer.ubiquity-container-identifiers</key>
+        <array>
+          <string>iCloud.$(CFBundleIdentifier)</string>
+        </array>
+        <key>com.apple.developer.ubiquity-kvstore-identifier</key>
+        <string>$(TeamIdentifierPrefix)$(CFBundleIdentifier)</string>
+      </dict>
+    </entitlements>
+  </ios>
+  <android xmlns:android="http://schemas.android.com/apk/res/android" />
+  <modules>
+    <module>hyperloop</module>
+  </modules>
+  <deployment-targets>
+    <target device="android">false</target>
+    <target device="ipad">true</target>
+    <target device="iphone">true</target>
+  </deployment-targets>
+  <sdk-version>7.1.0.GA</sdk-version>
+</ti:app>
