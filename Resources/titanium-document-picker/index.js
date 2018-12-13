@@ -9,12 +9,12 @@ var DocumentPickerDelegate = require('./document-picker-delegate.js');
 export default class TiDocumentPicker {
 
 	static show(params = {}) {
-    const isiPad = Ti.Platform.osname === 'ipad';:
+		const isiPad = Ti.Platform.osname === 'ipad';:
 		const selectCallback = params.select;
 		const cancelCallback = params.cancel;
 		const utis = params.utis;
 		const sourceView = params.sourceView;
-    const modalPresentationStyle = isiPad ? UIModalPresentationPopover : UIModalPresentationFormSheet;
+		const modalPresentationStyle = isiPad ? UIModalPresentationPopover : UIModalPresentationFormSheet;
 
 		if (!selectCallback) {
 			throw new Error('Missing "select" callback');
@@ -28,7 +28,7 @@ export default class TiDocumentPicker {
 		
 		if (Ti.Platform.osname === 'ipad' && !sourceView) {
 			throw new Error('Missing required sourceView for iPad');
-    }
+		}
 
 		const importMenu = UIDocumentMenuViewController.alloc().initWithDocumentTypesInMode(utis || [], UIDocumentPickerModeImport);
 		const pickerDelegate = new DocumentPickerDelegate();
