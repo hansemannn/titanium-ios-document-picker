@@ -1,7 +1,11 @@
 var TiApp = require('Titanium/TiApp');
 var UIDocumentMenuViewController = require('UIKit/UIDocumentMenuViewController');
 var UIDocumentPickerModeImport = require('UIKit').UIDocumentPickerModeImport;
-var UIModalPresentationFormSheet = require('UIKit').UIModalPresentationFormSheet;
+if (Ti.Platform.osname === 'ipad') {
+	var UIModalPresentation = require('UIKit').UIModalPresentationPopover;
+} else {
+	var UIModalPresentation = require('UIKit').UIModalPresentationFormSheet;
+}
 
 var DocumentPickerDelegate = require('./document-picker-delegate.js')
 
@@ -10,6 +14,7 @@ export default class TiDocumentPicker {
 		const selectCallback = params.select;
 		const cancelCallback = params.cancel;
 		const utis = params.utis;
+		const popoverView = params.popoverView;
 		
 		if (!selectCallback) {
 			throw 'Missing "select" callback';
@@ -35,7 +40,7 @@ export default class TiDocumentPicker {
 				results.push(urls.objectAtIndex(i).absoluteString);
 			}
 
-			return results;
+			selectCallback(results);
 		};
 		
 		pickerDelegate.didPickDocumentPicker = function(documentMenu, documentPicker) {
@@ -48,7 +53,12 @@ export default class TiDocumentPicker {
 		};
 
 		importMenu.delegate = pickerDelegate;
-		importMenu.modalPresentationStyle = UIModalPresentationFormSheet;
+		importMenu.modalPresentationStyle = UIModalPresentation;
+
+		if (Ti.Platform.osname === 'ipad') {
+			importMenu.popoverPresentationController.sourceView = popoverView;
+		}
+
 		TiApp.app().showModalController(importMenu, true);
 	}
 }
