@@ -6,21 +6,27 @@ var UIModalPresentationFormSheet = require('UIKit').UIModalPresentationFormSheet
 var DocumentPickerDelegate = require('./document-picker-delegate.js')
 
 export default class TiDocumentPicker {
+
 	static show(params = {}) {
 		const selectCallback = params.select;
 		const cancelCallback = params.cancel;
 		const utis = params.utis;
-		
+		const sourceView = params.sourceView;
+
 		if (!selectCallback) {
-			throw 'Missing "select" callback';
+			throw new Error('Missing "select" callback');
 			return;
 		}
-		
+
 		if (!utis) {
-			throw 'Missing uti\'s';
+			throw new Error('Missing required "utis" property');
 			return;
 		}
-		
+
+		if (Ti.Platform.osname === 'ipad' && !sourceView) {
+			throw new Error('Missing required "utis" property');
+		}
+
 		const importMenu = UIDocumentMenuViewController.alloc().initWithDocumentTypesInMode(utis || [], UIDocumentPickerModeImport);
 		const pickerDelegate = new DocumentPickerDelegate();
 		
@@ -48,7 +54,13 @@ export default class TiDocumentPicker {
 		};
 
 		importMenu.delegate = pickerDelegate;
-		importMenu.modalPresentationStyle = UIModalPresentationFormSheet;
+		importMenu.modalPresentationStyle = UIModalPresentationPopover;
+
+		// Assign source view to support iPad
+		if (sourceView) {
+    			importMenu.popoverPresentationController.sourceView = new UIView(sourceView);
+		}
+
 		TiApp.app().showModalController(importMenu, true);
 	}
 }
