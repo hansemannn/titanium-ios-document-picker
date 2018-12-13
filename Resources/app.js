@@ -14,7 +14,10 @@ btn.addEventListener('click', () => {
 		select: (urls) => {
 			Ti.API.info(urls);
 		},
-		cancel: () => {}
+		cancel: () => {
+			Ti.API.debug('**** TiDocumentPicker => CANCEL');
+		},
+		sourceView: btn
 	});
 });
 

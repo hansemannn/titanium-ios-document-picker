@@ -1,17 +1,20 @@
 var TiApp = require('Titanium/TiApp');
 var UIDocumentMenuViewController = require('UIKit/UIDocumentMenuViewController');
 var UIDocumentPickerModeImport = require('UIKit').UIDocumentPickerModeImport;
+var UIModalPresentationPopover = require('UIKit').UIModalPresentationPopover;
 var UIModalPresentationFormSheet = require('UIKit').UIModalPresentationFormSheet;
 
-var DocumentPickerDelegate = require('./document-picker-delegate.js')
+var DocumentPickerDelegate = require('./document-picker-delegate.js');
 
 export default class TiDocumentPicker {
 
 	static show(params = {}) {
+    const isiPad = Ti.Platform.osname === 'ipad';:
 		const selectCallback = params.select;
 		const cancelCallback = params.cancel;
 		const utis = params.utis;
 		const sourceView = params.sourceView;
+    const modalPresentationStyle = isiPad ? UIModalPresentationPopover : UIModalPresentationFormSheet;
 
 		if (!selectCallback) {
 			throw new Error('Missing "select" callback');
@@ -22,10 +25,10 @@ export default class TiDocumentPicker {
 			throw new Error('Missing required "utis" property');
 			return;
 		}
-
+		
 		if (Ti.Platform.osname === 'ipad' && !sourceView) {
-			throw new Error('Missing required "utis" property');
-		}
+			throw new Error('Missing required sourceView for iPad');
+    }
 
 		const importMenu = UIDocumentMenuViewController.alloc().initWithDocumentTypesInMode(utis || [], UIDocumentPickerModeImport);
 		const pickerDelegate = new DocumentPickerDelegate();
@@ -41,7 +44,7 @@ export default class TiDocumentPicker {
 				results.push(urls.objectAtIndex(i).absoluteString);
 			}
 
-			return results;
+			selectCallback(results);
 		};
 		
 		pickerDelegate.didPickDocumentPicker = function(documentMenu, documentPicker) {
@@ -54,11 +57,11 @@ export default class TiDocumentPicker {
 		};
 
 		importMenu.delegate = pickerDelegate;
-		importMenu.modalPresentationStyle = UIModalPresentationPopover;
+		importMenu.modalPresentationStyle = modalPresentationStyle;
 
 		// Assign source view to support iPad
-		if (sourceView) {
-    			importMenu.popoverPresentationController.sourceView = new UIView(sourceView);
+		if (Ti.Platform.osname === 'ipad' && sourceView) {
+			importMenu.popoverPresentationController.sourceView = sourceView;
 		}
 
 		TiApp.app().showModalController(importMenu, true);
