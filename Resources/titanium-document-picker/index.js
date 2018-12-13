@@ -14,18 +14,22 @@ export default class TiDocumentPicker {
 		const selectCallback = params.select;
 		const cancelCallback = params.cancel;
 		const utis = params.utis;
-		const popoverView = params.popoverView;
+		const sourceView = params.sourceView;
 		
 		if (!selectCallback) {
-			throw 'Missing "select" callback';
+			throw new Error('Missing "select" callback');
 			return;
 		}
 		
 		if (!utis) {
-			throw 'Missing uti\'s';
+			throw new Error('Missing required "utis" property');
 			return;
 		}
 		
+		if (Ti.Platform.osname === 'ipad' && !sourceView) {
+			throw new Error('Missing required sourceView for iPad');
+		}
+
 		const importMenu = UIDocumentMenuViewController.alloc().initWithDocumentTypesInMode(utis || [], UIDocumentPickerModeImport);
 		const pickerDelegate = new DocumentPickerDelegate();
 		
@@ -55,8 +59,9 @@ export default class TiDocumentPicker {
 		importMenu.delegate = pickerDelegate;
 		importMenu.modalPresentationStyle = UIModalPresentation;
 
-		if (Ti.Platform.osname === 'ipad') {
-			importMenu.popoverPresentationController.sourceView = popoverView;
+		// Assign source view to support iPad
+		if (Ti.Platform.osname === 'ipad' && sourceView) {
+			importMenu.popoverPresentationController.sourceView = sourceView;
 		}
 
 		TiApp.app().showModalController(importMenu, true);

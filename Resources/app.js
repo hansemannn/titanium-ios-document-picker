@@ -17,7 +17,7 @@ btn.addEventListener('click', () => {
 		cancel: () => {
 			Ti.API.debug('**** TiDocumentPicker => CANCEL');
 		},
-		popoverView: btn
+		sourceView: btn
 	});
 });
 
