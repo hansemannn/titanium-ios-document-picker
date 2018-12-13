@@ -9,7 +9,7 @@ var DocumentPickerDelegate = require('./document-picker-delegate.js');
 export default class TiDocumentPicker {
 
 	static show(params = {}) {
-    const isiPad = Ti.Platform.osname === 'ipad';:
+    const isiPad = Ti.Platform.osname === 'ipad';
 		const selectCallback = params.select;
 		const cancelCallback = params.cancel;
 		const utis = params.utis;
@@ -26,7 +26,7 @@ export default class TiDocumentPicker {
 			return;
 		}
 		
-		if (Ti.Platform.osname === 'ipad' && !sourceView) {
+		if (isiPad && !sourceView) {
 			throw new Error('Missing required sourceView for iPad');
     }
 
@@ -60,7 +60,7 @@ export default class TiDocumentPicker {
 		importMenu.modalPresentationStyle = modalPresentationStyle;
 
 		// Assign source view to support iPad
-		if (Ti.Platform.osname === 'ipad' && sourceView) {
+		if (isiPad && sourceView) {
 			importMenu.popoverPresentationController.sourceView = sourceView;
 		}
 

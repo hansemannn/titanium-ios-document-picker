@@ -21,7 +21,9 @@ btn.addEventListener('click', () => {
     select: (urls) => {
       Ti.API.info(urls);
     },
-    cancel: () => {}
+    cancel: () => {},
+    // Only for iPad
+    sourceView: btn
   });
 });
 
