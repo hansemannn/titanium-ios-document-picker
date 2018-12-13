@@ -1,26 +1,26 @@
 var TiApp = require('Titanium/TiApp');
 var UIDocumentMenuViewController = require('UIKit/UIDocumentMenuViewController');
 var UIDocumentPickerModeImport = require('UIKit').UIDocumentPickerModeImport;
-if (Ti.Platform.osname === 'ipad') {
-	var UIModalPresentation = require('UIKit').UIModalPresentationPopover;
-} else {
-	var UIModalPresentation = require('UIKit').UIModalPresentationFormSheet;
-}
+var UIModalPresentationPopover = require('UIKit').UIModalPresentationPopover;
+var UIModalPresentationFormSheet = require('UIKit').UIModalPresentationFormSheet;
 
-var DocumentPickerDelegate = require('./document-picker-delegate.js')
+var DocumentPickerDelegate = require('./document-picker-delegate.js');
 
 export default class TiDocumentPicker {
+
 	static show(params = {}) {
+    const isiPad = Ti.Platform.osname === 'ipad';:
 		const selectCallback = params.select;
 		const cancelCallback = params.cancel;
 		const utis = params.utis;
 		const sourceView = params.sourceView;
-		
+    const modalPresentationStyle = isiPad ? UIModalPresentationPopover : UIModalPresentationFormSheet;
+
 		if (!selectCallback) {
 			throw new Error('Missing "select" callback');
 			return;
 		}
-		
+
 		if (!utis) {
 			throw new Error('Missing required "utis" property');
 			return;
@@ -28,7 +28,7 @@ export default class TiDocumentPicker {
 		
 		if (Ti.Platform.osname === 'ipad' && !sourceView) {
 			throw new Error('Missing required sourceView for iPad');
-		}
+    }
 
 		const importMenu = UIDocumentMenuViewController.alloc().initWithDocumentTypesInMode(utis || [], UIDocumentPickerModeImport);
 		const pickerDelegate = new DocumentPickerDelegate();
@@ -57,7 +57,7 @@ export default class TiDocumentPicker {
 		};
 
 		importMenu.delegate = pickerDelegate;
-		importMenu.modalPresentationStyle = UIModalPresentation;
+		importMenu.modalPresentationStyle = modalPresentationStyle;
 
 		// Assign source view to support iPad
 		if (Ti.Platform.osname === 'ipad' && sourceView) {
